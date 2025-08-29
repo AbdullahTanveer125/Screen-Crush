@@ -6,7 +6,7 @@ import { FaHeart } from "react-icons/fa";
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
-
+import { toast } from 'react-toastify';
 
 // ✅ Server Component - accepts `params` directly
 const MovieDetails = () => {
@@ -30,13 +30,14 @@ const MovieDetails = () => {
 
     const handleAddToFavorite = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/user/favorite", {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_HTTP_URL}/user/favorite`, {
                 userId: auth.user._id,
                 movie: movie2,
             });
 
             if (res.data.success) {
-                alert(res.data.message);
+                // alert(res.data.message);
+                toast.success("Added to favorites!");
             } else {
                 alert("Failed to add favorite.");
             }

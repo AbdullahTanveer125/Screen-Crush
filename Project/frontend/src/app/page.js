@@ -51,7 +51,7 @@ function Home() {
     console.log("=== vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv =======")
     const syncLogin = async () => {
       if (session?.user && !auth?.token) {
-        const res = await axios.post("http://localhost:5000/user/login", {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_HTTP_URL}/user/login`, {
           email: session.user.email,
           username: session.user.name.replace(/\s/g, "").toLowerCase(),
           image: session.user.image,
@@ -81,7 +81,7 @@ function Home() {
     // In a real app, you would fetch from your API endpoint
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/popular-movies');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/api/popular-movies`);
         console.log("ggggg====", response)
         // const data = await response.json();
         console.log("==== response.data.results ====", response.data.results)

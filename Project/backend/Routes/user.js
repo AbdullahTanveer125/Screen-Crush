@@ -35,22 +35,24 @@ user_router.post("/login", async (req, res) => {
 
     console.log("EEEEEEEEEEE:", existingUser)
 
-    res.status(200).json({
-      success: true,
-      message: "Login Successfully!",
-      token,
-      user: existingUser
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Login Successfully!",
+    //   token,
+    //   user: existingUser
+    // });
 
     if (!existingUser) {
       await user_model.create({ email, username, image });
     }
 
     res.status(200).json({
-            success: true,
-            message: "Login Successfully!",
-            // result,
-        });
+      success: true,
+      message: "Login Successfully!",
+      token,
+      user: existingUser
+      // result,
+    });
 
   } catch (err) {
     console.error("Error storing user:", err.message);

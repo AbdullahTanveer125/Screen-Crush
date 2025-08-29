@@ -1,109 +1,3 @@
-// 'use client';
-
-// import { useEffect, useState } from "react";
-// import { useAuth } from "@/context/AuthContext";
-// import axios from "axios";
-// import Image from "next/image";
-
-// const CartPage = () => {
-//   const [auth] = useAuth(); // Assuming auth contains { user, token }
-//   const [cart, setCart] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   const fetchCart = async () => {
-//     try {
-//       const userId = auth?.user?._id;
-
-//       if (!userId) return;
-
-//       const res = await axios.get(`http://localhost:5000/cart/${userId}`);
-//       if (res.data.success) {
-//         setCart(res.data.cart);
-//       } else {
-//         alert("Failed to fetch cart items");
-//       }
-//     } catch (err) {
-//       console.error("Error fetching cart:", err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchCart();
-//   }, [auth]);
-
-//   if (loading) return <p className="text-white">Loading cart...</p>;
-
-//   return (
-//     <div className="min-h-screen bg-gray-900 text-white p-6">
-//       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-
-//       {cart.length === 0 ? (
-//         <p>No items in cart</p>
-//       ) : (
-//         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-//           {cart.map((item) => (
-//             <div
-//               key={item._id}
-//               className="bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center"
-//             >
-//               <Image
-//                 src={`https://image.tmdb.org/t/p/w500${item.movie.poster_path}`}
-//                 alt={item.movie.title}
-//                 width={200}
-//                 height={300}
-//                 className="rounded mb-4"
-//               />
-//               <h2 className="text-xl font-semibold">{item.movie.title}</h2>
-//               <p className="text-sm text-gray-400">{item.movie.release_date}</p>
-//               <p className="mt-2 text-sm">{item.movie.overview.slice(0, 100)}...</p>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default CartPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import { useEffect, useState } from "react";
@@ -126,7 +20,7 @@ const CartPage = () => {
             const userId = auth?.user?._id;
             if (!userId) return;
 
-            const res = await axios.get(`http://localhost:5000/cart/${userId}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/cart/${userId}`);
             if (res.data.success) {
                 setCart(res.data.cart);
                 calculateTotal(res.data.cart);
@@ -148,7 +42,7 @@ const CartPage = () => {
 
     const removeFromCart = async (movieId) => {
         try {
-            const res = await axios.delete(`http://localhost:5000/cart/${auth.user._id}/${movieId}`);
+            const res = await axios.delete(`${process.env.NEXT_PUBLIC_HTTP_URL}/cart/${auth.user._id}/${movieId}`);
             if (res.data.success) {
                 setCart(cart.filter(item => item.movie.id !== movieId));
                 calculateTotal(cart.filter(item => item.movie.id !== movieId));

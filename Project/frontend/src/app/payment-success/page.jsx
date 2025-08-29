@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const PaymentSuccess = () => {
 
@@ -18,11 +19,12 @@ const PaymentSuccess = () => {
         const verifyPayment = async () => {
             if (!sessionId) return;
 
-            const res = await axios.get(`http://localhost:5000/payment/verify-session/${sessionId}/${auth.user.email}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/payment/verify-session/${sessionId}/${auth.user.email}`);
             console.log(res.data);
 
             if (res.data.success) {
-                alert('Payment verified & plan updated!');
+                // alert('Payment verified & plan updated!');
+                toast.success("Payment verified & plan updated!");
                 setAuth((prev) => ({
                     ...prev,            // keep previous token, isLoggedIn, etc.
                     user: res.data.user // only update user

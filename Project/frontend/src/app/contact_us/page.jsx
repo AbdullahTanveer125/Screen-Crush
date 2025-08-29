@@ -30,19 +30,21 @@ function ContactUs() {
 		setIsSubmitting(true);
 
 		try {
-			const response = await axios.post('http://localhost:5000/contact', formData); // adjust the URL if needed
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_HTTP_URL}/contact`, formData); // adjust the URL if needed
 			console.log('Server response:', response);
 
 
 
 			if (response.data.success) {
 				// Reset form on success
+				setIsSubmitting(false);
 				setFormData({ name: '', email: '', phone: '', comment: '' });
 				toast.success("Message submitted successfully!");
 				// alert('Message submitted successfully!');
 			}
 
 		} catch (error) {
+			setIsSubmitting(false);
 			console.error('Error submitting the contact_us form:', error);
 			toast.error("Something went wrong in contact_us form. Please try again later.");
 			// alert('Something went wrong in contact_us form. Please try again later.');

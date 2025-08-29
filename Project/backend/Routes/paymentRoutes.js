@@ -76,6 +76,9 @@ payment_router.post('/create-checkout-session/:userId', async (req, res) => {
 
     const { userId } = req.params;
     const { planId, email } = req.body;
+
+    console.log("=== REQ BODY ===", req.body)
+    console.log("=== REQ PARAMS ===", req.params)
     // const { priceId } = req.body;
 
     console.log("userId", userId)

@@ -164,7 +164,7 @@ export default function AboutUs() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { name: "Alex Johnson", role: "Founder & CEO", image: "/boy1.jpg" },
-              { name: "Maria Garcia", role: "Lead Developer", image: "/boy2.png" },
+              { name: "Abdullah Tanveer", role: "Lead Developer", image: "/boy2.png" },
               { name: "James Wilson", role: "Content Curator", image: "/boy3.jpg" },
               { name: "Sarah Lee", role: "UX Designer", image: "/boy4.jpg" }
             ].map((member, index) => (

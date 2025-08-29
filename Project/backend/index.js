@@ -17,9 +17,7 @@ app.use(cors({
 // const sampleRoute = require("./routes/sampleRoute");
 // app.use("/api/sample", sampleRoute);
 
-console.log("Rehman with  ==", process.env.STRIP_BASIC_PRICE)
-console.log("Rehman with  ==", process.env.STRIP_STANDARD_PRICE)
-console.log("Rehman with  ==", process.env.STRIP_PREMIUM_PRICE)
+
 
 console.log("DB ==", process.env.MONGODB_URI)
 
@@ -39,14 +37,14 @@ connectDB();
 
 
 // TMDb Configuration
-const TMDB_API_KEY = 'ffb541e73dda3c12b99b2d15bbd362a8'; // or use Read Access Token in headers
+// const TMDB_API_KEY = 'ffb541e73dda3c12b99b2d15bbd362a8'; // or use Read Access Token in headers
 
 // Route: Get Popular Movies
 app.get('/api/popular-movies', async (req, res) => {
   try {
     const response = await axios.get(`https://api.themoviedb.org/3/movie/popular`, {
       params: {
-        api_key: TMDB_API_KEY
+        api_key: process.env.TMDB_API_KEY
       }
     });
 

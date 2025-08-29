@@ -23,7 +23,7 @@ const handler = NextAuth({
 
 			try {
 				console.log("==== in login API ====")
-				const response = await axios.post("http://localhost:5000/user/login", {
+				const response = await axios.post(`${process.env.NEXT_PUBLIC_HTTP_URL}/user/login`, {
 					email: profile.email,
 					username: profile.name.replace(/\s/g, "").toLowerCase(),
 					image: profile.picture,
