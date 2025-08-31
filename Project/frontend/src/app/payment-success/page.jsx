@@ -1,5 +1,6 @@
-// app/payment-success/page.jsx
 'use client';
+export const dynamic = 'force-dynamic'; // ← add this line
+
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
