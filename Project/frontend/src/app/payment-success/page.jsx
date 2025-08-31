@@ -1,6 +1,6 @@
 // app/payment-success/page.jsx
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
@@ -14,31 +14,60 @@ const PaymentSuccess = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('session_id');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const verifyPayment = async () => {
             if (!sessionId) return;
 
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/payment/verify-session/${sessionId}/${auth.user.email}`);
-            console.log(res.data);
 
-            if (res.data.success) {
-                // alert('Payment verified & plan updated!');
-                toast.success("Payment verified & plan updated!");
-                setAuth((prev) => ({
-                    ...prev,            // keep previous token, isLoggedIn, etc.
-                    user: res.data.user // only update user
-                }));
-
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/payment/verify-session/${sessionId}/${auth.user.email}`);
+                if (res.data.success) {
+                    toast.success("Payment verified & plan updated!");
+                    setAuth((prev) => ({
+                        ...prev,
+                        user: res.data.user
+                    }));
+                } else {
+                    toast.error("Payment verification failed!");
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error("Something went wrong verifying payment.");
             }
+            finally { setLoading(false); }
+
+
+            // const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/payment/verify-session/${sessionId}/${auth.user.email}`);
+            // console.log(res.data);
+
+            // if (res.data.success) {
+            //     // alert('Payment verified & plan updated!');
+            //     toast.success("Payment verified & plan updated!");
+            //     setAuth((prev) => ({
+            //         ...prev,            // keep previous token, isLoggedIn, etc.
+            //         user: res.data.user // only update user
+            //     }));
+
+            // }
         };
 
         verifyPayment();
     }, [sessionId]);
 
+    // useEffect(() => {
+    //     if (auth.user?.plan) {
+    //         setTimeout(() => router.push('/'), 3000);
+    //     }
+    // }, [auth?.user]);
+
+
     console.log("=== ggggggggggggg auth ====", auth)
     return (
         <div className="text-center">
+            {loading ? <p className="text-white">Verifying your payment...</p> : ""}
+
             <div className="min-h-screen bg-slate-600 flex items-center justify-center">
                 <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
                     <div className="text-center">
