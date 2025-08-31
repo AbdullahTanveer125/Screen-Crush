@@ -20,7 +20,7 @@ user_router.post("/login", async (req, res) => {
     if (!existingUser) {
       const response = await user_model.create({ email, username, image });
       console.log("DDDDDDDDDDDD:", response)
-      const token = await JWT.sign({ _id: response._id }, "abdullah", { expiresIn: "7d" });
+      const token = await JWT.sign({ _id: response._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
       res.status(200).json({
         success: true,
         message: "Login Successfully!",
@@ -31,7 +31,7 @@ user_router.post("/login", async (req, res) => {
 
     console.log("console before token.......")
     // console.log("DDDDDDDDDDDD:", response)
-    const token = await JWT.sign({ _id: existingUser._id }, "abdullah", { expiresIn: "7d" });
+    const token = await JWT.sign({ _id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
     console.log("EEEEEEEEEEE:", existingUser)
 

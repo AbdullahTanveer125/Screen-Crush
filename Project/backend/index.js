@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());// Middleware to parse JSON data
 
 app.use(cors({
-  origin: "http://localhost:3000", // your frontend URL
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000', // your frontend URL
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
