@@ -13,6 +13,8 @@ export default function Feedbacks() {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
+    console.log('====== API URL ========', process.env.NEXT_PUBLIC_HTTP_URL);
+
     useEffect(() => {
         const fetchContacts = async () => {
             try {

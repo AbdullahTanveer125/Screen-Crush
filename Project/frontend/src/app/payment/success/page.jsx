@@ -1,24 +1,25 @@
 'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 
-export default function PaymentSuccess() {
+// Create a component that uses useSearchParams
+function PaymentSuccessContent() {
     const router = useRouter();
-    const { session_id } = router.query;
+    const { useSearchParams } = require('next/navigation');
+    const searchParams = useSearchParams();
+    const session_id = searchParams.get('session_id');
     const [auth, setAuth] = useAuth();
 
     useEffect(() => {
         if (session_id) {
-            // Verify payment and update user status
             const verifyPayment = async () => {
                 try {
                     const { data } = await axios.post('/api/payment/verify', {
                         sessionId: session_id,
                     });
 
-                    // Update user context with subscription info
                     setAuth({
                         ...auth,
                         user: {
@@ -34,7 +35,7 @@ export default function PaymentSuccess() {
 
             verifyPayment();
         }
-    }, [session_id]);
+    }, [session_id, auth, setAuth]);
 
     return (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -70,3 +71,19 @@ export default function PaymentSuccess() {
         </div>
     );
 }
+
+// Main component with Suspense
+export default function PaymentSuccess() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+                <div className="text-white">Loading...</div>
+            </div>
+        }>
+            <PaymentSuccessContent />
+        </Suspense>
+    );
+}
+
+// Force dynamic rendering to avoid static generation issues
+export const dynamic = 'force-dynamic';

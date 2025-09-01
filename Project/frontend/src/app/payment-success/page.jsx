@@ -1,7 +1,5 @@
 'use client';
-export const dynamic = 'force-dynamic'; // ← add this line
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
@@ -9,8 +7,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-const PaymentSuccess = () => {
-
+// Move the main logic to a component that uses useSearchParams
+function PaymentSuccessContent() {
     const [auth, setAuth] = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -20,7 +18,6 @@ const PaymentSuccess = () => {
     useEffect(() => {
         const verifyPayment = async () => {
             if (!sessionId) return;
-
 
             try {
                 const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/payment/verify-session/${sessionId}/${auth.user.email}`);
@@ -36,33 +33,13 @@ const PaymentSuccess = () => {
             } catch (error) {
                 console.error(error);
                 toast.error("Something went wrong verifying payment.");
+            } finally { 
+                setLoading(false); 
             }
-            finally { setLoading(false); }
-
-
-            // const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/payment/verify-session/${sessionId}/${auth.user.email}`);
-            // console.log(res.data);
-
-            // if (res.data.success) {
-            //     // alert('Payment verified & plan updated!');
-            //     toast.success("Payment verified & plan updated!");
-            //     setAuth((prev) => ({
-            //         ...prev,            // keep previous token, isLoggedIn, etc.
-            //         user: res.data.user // only update user
-            //     }));
-
-            // }
         };
 
         verifyPayment();
-    }, [sessionId]);
-
-    // useEffect(() => {
-    //     if (auth.user?.plan) {
-    //         setTimeout(() => router.push('/'), 3000);
-    //     }
-    // }, [auth?.user]);
-
+    }, [sessionId, auth.user.email, setAuth]);
 
     console.log("=== ggggggggggggg auth ====", auth)
     return (
@@ -102,6 +79,20 @@ const PaymentSuccess = () => {
             </div>
         </div>
     );
+}
+
+// Main component with Suspense boundary
+const PaymentSuccess = () => {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-600 flex items-center justify-center">
+                <p className="text-white">Loading...</p>
+            </div>
+        }>
+            <PaymentSuccessContent />
+        </Suspense>
+    );
 };
 
 export default PaymentSuccess;
+export const dynamic = 'force-dynamic';

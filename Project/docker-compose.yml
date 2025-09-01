@@ -1,3 +1,4 @@
+
 services:
   frontend:
     build: ./frontend
@@ -5,8 +6,12 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    env_file:
+      - ./frontend/.env  # ← Use frontend's .env file
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:5000   # use backend service name instead of localhost
+      - NEXT_PUBLIC_HTTP_URL=http://localhost:5000  # ← Add this explicitly
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}   
+      - NEXTAUTH_URL=http://localhost:3000  
     depends_on:
       - backend
 
@@ -16,9 +21,12 @@ services:
     restart: always
     ports:
       - "5000:5000"
+    env_file:
+      - ./backend/.env  # ← Add this line to specify the .env file
     environment:
       - NODE_ENV=production
       - PORT=5000
-      - MONGO_URL=${MONGODB_URI}   # Atlas connection string from .env
+      # - MONGO_URL=${MONGODB_URI}   # Atlas connection string from .env
+      - MONGODB_URI=${MONGODB_URI}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     
